@@ -1,0 +1,121 @@
+version: '3.4'
+
+services:
+  # pythonworld:
+  #   image: pythonworld
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000 --nothreading"]
+  #   ports:
+  #     - 8000:8000
+  #     - 5678:5678
+  #   volumes:
+  #     - .:/app
+  # producer:
+  #   build:
+  #     context: .
+  #   command: python3 producer.py
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 10
+  #   depends_on:
+  #     - rabbitmq
+  #     - redis
+    
+
+  # consumer:
+  #   build:
+  #     context: .
+  #   command: python3 consumer.py
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 5
+  #   depends_on:
+  #     - rabbitmq
+  #     - redis
+
+  pythonworld:
+    image: pythonworld
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "pythonworld.wsgi"]
+    environment:
+      - FLUENTD_HOST=fluentd
+      - FLUENTD_PORT=24224
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - fluentd
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+
+  fluentd:
+    build: ./fluentd
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    environment:
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+    depends_on:
+      - elasticsearch
+
+  
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+
+  # rabbitmq:
+  #   image: "rabbitmq:3-management-alpine"
+  #   container_name: rabbitmq_container
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: "guest"
+  #     RABBITMQ_DEFAULT_PASS: "guest"
+  #   restart: always
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      discovery.type: "single-node"
+      xpack.security.enabled: false
+    ports:
+      - "9200:9200"
+    
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+      xpack.security.enabled: false
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+      
+
+
+volumes:
+  redis_data:
+  rabbitmq_data:
