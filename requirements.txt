@@ -3,3 +3,5 @@ gunicorn
 django-redis
 redis
 pika
+celery==5.3.6
+flower==2.0.0

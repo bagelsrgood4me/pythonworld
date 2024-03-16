@@ -9,8 +9,15 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import json
+import logging
+import sys
+import logging.config
 from pathlib import Path
+
+
+CELERY_BROKER_URL = 'pyamqp://rabbitmq_container:5672'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'pythonworld.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pythonworld.wsgi.application'
+WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Database
@@ -132,11 +139,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-import json
-import logging
-import sys
-
 class CustomStreamHandler(logging.StreamHandler):
     def emit(self, record):
         log_record = {
@@ -150,7 +152,7 @@ class CustomStreamHandler(logging.StreamHandler):
             'module': record.module,
             'func_name': record.funcName,
             'line_no': record.lineno,
-            'exception': self.formatException(record.exc_info) if record.exc_info else None
+            # 'exception': self.formatException(record.exc_info) if record.exc_info else None
         }
         if record.levelno >= logging.WARNING:
             stream = sys.stderr

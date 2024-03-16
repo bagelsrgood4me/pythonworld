@@ -1,9 +1,4 @@
 from ninja import NinjaAPI
 
 api = NinjaAPI()
-
-
-@api.get("/hello")
-def hello(request):
-    return "Hello world test"
-
+api.add_router("/", "app.api.router.router")

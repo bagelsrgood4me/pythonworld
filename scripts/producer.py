@@ -22,7 +22,7 @@ data = {
                 "zip": "12345"
             },
             {
-                "type": "work",
+                "type": "my_package",
                 "street": "456 Elm St",
                 "city": "Another Town",
                 "state": "NY",
