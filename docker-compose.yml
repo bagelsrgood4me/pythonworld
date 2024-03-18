@@ -57,7 +57,7 @@ services:
     build:
       context: .
       dockerfile: workers/opendns/Dockerfile
-    command: tail -f /dev/null
+#    command: tail -f /dev/null
 
 #  firewall-worker:
 #    build:

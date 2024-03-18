@@ -15,9 +15,9 @@ def hello(request):
         # "firewall.block.block",
         # "firewall.sanity.sanity",
         # "firewall.validation.validation",
-        "opendns.block.task_block",
-        "opendns.sanity.task_sanity",
-        "opendns.validation.task_validation"
+        "opendns.tasks.block",
+        "opendns.tasks.sanity",
+        "opendns.tasks.validation"
     ]
     response = []
     for task in task_list:

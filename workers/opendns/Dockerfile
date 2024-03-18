@@ -22,4 +22,4 @@ WORKDIR /app
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-#CMD celery -A app worker --loglevel=debug
+CMD celery -A opendns.app worker --loglevel=debug
