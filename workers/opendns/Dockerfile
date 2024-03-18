@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED=1
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-COPY opendns /app
+COPY workers /app
 
 WORKDIR /app
 
@@ -22,4 +22,4 @@ WORKDIR /app
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-CMD celery -A app worker --loglevel=debug
+#CMD celery -A app worker --loglevel=debug

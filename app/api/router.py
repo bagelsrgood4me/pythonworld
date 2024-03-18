@@ -8,15 +8,22 @@ def hello(request):
     # result = client_app.send_task("server_celery.worker_task", args=[2,3])
     r = 0
 
-    while True:
-        r = client_app.send_task("myapp1.tasks.worker_task", args=[2, 3])
-        r2 = client_app.send_task("myapp2.tasks.worker_task", args=[2, 3])
-        print(r.id)
-        # res = AsyncResult(result.id, app=client_app)
-        # if res.state != 'SUCCESS':
-        #     time.sleep(3)
-        #     continue
-        # r = res.get()
-        # break
-    return 'Test'
+    task_list = [
+        # "proxy.block.task_block",
+        # "proxy.sanity.task_sanity",
+        # "proxy.validation.task_validation",
+        # "firewall.block.block",
+        # "firewall.sanity.sanity",
+        # "firewall.validation.validation",
+        "opendns.block.task_block",
+        "opendns.sanity.task_sanity",
+        "opendns.validation.task_validation"
+    ]
+    response = []
+    for task in task_list:
+        time.sleep(1)
+        r2 = client_app.send_task(task, args=[2, 3])
+        response.append(f"{task}:{r2.status}")
+
+    return response
 

@@ -49,15 +49,39 @@ services:
       CELERY_RESULT_BACKEND: redis://redis
       FLOWER_UNAUTHENTICATED_API: true
     depends_on:
-      - celery-worker
+      - opendns-worker
+#      - proxy-worker
       - redis
 
-  celery-worker:
-    build: .
-    command: celery -A server_celery worker --loglevel=debug
-    volumes:
-      - ./worker:/app
+  opendns-worker:
+    build:
+      context: .
+      dockerfile: workers/opendns/Dockerfile
+    command: tail -f /dev/null
 
+#  firewall-worker:
+#    build:
+#      context: .
+#      dockerfile: workers/firewall/Dockerfile
+#
+#  proxy-worker:
+#    build:
+#      context: .
+#      dockerfile: workers/proxy/Dockerfile
+
+#  proxy-worker:
+#    build: .
+#    command: celery -A worker worker --loglevel=debug
+#    volumes:
+#      - ./workers/opendns:/app/myworker
+#      - ./workers/worker.py:/app/worker.py
+#
+#  firewall-worker:
+#    build: .
+#    command: celery -A worker worker --loglevel=debug
+#    volumes:
+#      - ./workers/opendns:/app/myworker
+#      - ./workers/worker.py:/app/worker.py
 volumes:
   redis_data:
   rabbitmq_data:
