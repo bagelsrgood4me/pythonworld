@@ -1,19 +1,18 @@
 from celery import shared_task
-
+from .helper import sum
 
 @shared_task
 def block(x, y):
     # Task logic to process data
-    return 5
+    return sum(x,y)
 
 
 @shared_task
 def sanity(x, y):
     # Task logic to process data
-    return 5
-
+    return sum(x, y)
 
 @shared_task
 def validation(x, y):
     # Task logic to process data
-    return 5
+    return sum(x, y)
