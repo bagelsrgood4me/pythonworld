@@ -10,5 +10,8 @@ def sanity(request, id: str = None):
     header = [add.si(i, i) for i in range(10)]
 
     # Define the chord with the group and the success callback
-    r = chord(header)(callback)
-    return "r.id"
+    res = chord(header)(callback)
+
+    # res = add.si(1,1).apply_async()
+
+    return res.id

@@ -1,10 +1,15 @@
 from celery import shared_task
 from .models import Block
 from django.core import serializers
+import random
+import time
+
 @shared_task
 def add(x, y):
+    time.sleep(random.randint(1,60))
     total = x + y
-    update.apply_async(total)
+    # update.apply_async(total)
+    return total
 
 
 @shared_task
