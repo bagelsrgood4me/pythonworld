@@ -53,6 +53,12 @@ services:
 #      - proxy-worker
       - redis
 
+  operator-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: tail -f /dev/null
+
   opendns-worker:
     build:
       context: .

@@ -15,10 +15,6 @@ import sys
 import logging.config
 from pathlib import Path
 
-
-CELERY_BROKER_URL = 'pyamqp://rabbitmq_container:5672'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app.api.apps.ApiConfig',
+    'ninja'
 ]
 
 MIDDLEWARE = [
