@@ -3,7 +3,6 @@ import random
 
 
 def sum(x, y):
-    sleep_timer = random.randint(0, 60)
-    print(sleep_timer)
+    sleep_timer = random.randint(0, 3)
     time.sleep(sleep_timer)
     return x + y
