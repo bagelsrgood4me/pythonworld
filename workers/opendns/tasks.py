@@ -16,3 +16,10 @@ def sanity(x, y):
 def validation(x, y):
     # Task logic to process data
     return sum(x, y)
+
+
+@shared_task
+def on_chord_success(results):
+    # This function will be called when all tasks in the chord complete successfully
+    print("All tasks completed successfully")
+    return results
